@@ -148,6 +148,14 @@ function buildPlayerModel(root: Object3D, skin: MeshBasicMaterial, cape: MeshBas
         if (model.y) { mesh.position.y = model.y; }
         if (model.x) { mesh.position.x = model.x; }
         if (model.z) { mesh.position.z = model.z; }
+        mesh.geometry.computeBoundingBox()
+        const distx = mesh.geometry.boundingBox?.max.x
+        const disty = mesh.geometry.boundingBox?.max.y
+        if (partName === "head" || partName === "leftArm" || partName === "rightArm" || partName === "leftLeg" || partName === "rightLeg") {
+            mesh.position.x += distx ?? 0
+            mesh.position.y += disty ?? 0
+            mesh.geometry.translate(-(distx ?? 0), -(disty ?? 0), 0)
+        }
         if (partName === "cape") {
             mesh.rotation.x = 25 * (Math.PI / 180);
         }
@@ -165,7 +173,10 @@ function buildPlayerModel(root: Object3D, skin: MeshBasicMaterial, cape: MeshBas
             if (layer.y) { layerMesh.position.y = layer.y; }
             if (layer.x) { layerMesh.position.x = layer.x; }
             if (layer.z) { layerMesh.position.z = layer.z; }
-
+            if (partName === "head" || partName === "leftArm" || partName === "rightArm" || partName === "leftLeg" || partName === "rightLeg") {
+                layerMesh.position.x -= distx ?? 0
+                layerMesh.position.y -= disty ?? 0
+            }
             mapCubeUV(layerMesh, layer);
 
             mesh.add(layerMesh);
@@ -184,19 +195,11 @@ function ensureImage(textureSource: TextureSource) {
     return new Promise<HTMLImageElement>((resolve, reject) => {
         const img = new Image();
         img.onload = () => { resolve(img); };
-        try {
-            const url = new URL(textureSource);
-            switch (url.protocol) {
-                case "data:":
-                case "https:":
-                case "http:":
-                    img.src = textureSource;
-                    break;
-                default:
-                    reject(new Error(`Unsupported protocol ${url.protocol}!`));
-            }
-        } catch (e) {
-            img.src = `data:image/png;base64, ${textureSource}`;
+        img.onerror = (e, source, lineno, colno, error) => { reject(error) }
+        if (textureSource as any instanceof URL) {
+            img.src = textureSource.toString()
+        } else {
+            img.src = textureSource
         }
     });
 }
