@@ -11,6 +11,9 @@
 
 ## Usage
 
+### Rotating player body part with skin model
+Use THREE.js rotateX, rotateY, rotateZ to rotate the mesh (body part) child under model
+
 ### Build THREE.js model for block and player (PREVIEW, not available yet)
 
 *Please read how to use [resource-manager](https://github.com/voxelum/minecraft-launcher-core-node/packages/resource-manager/README.md) before this*
