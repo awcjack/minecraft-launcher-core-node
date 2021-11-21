@@ -1,6 +1,6 @@
 {
   "name": "xmcl-minecraft-launcher-core-node-model",
-  "version": "1.0.16-1",
+  "version": "1.0.16-2",
   "main": "./index.cjs.js",
   "module": "./index.js",
   "description": "Create Three.js model for player and block, Allow rotating player bodypart in model",
@@ -11,7 +11,7 @@
     "access": "public"
   },
   "dependencies": {
-    "@xmcl/resourcepack": "file:../resourcepack"
+    "@xmcl/resourcepack": "1.0.16"
   },
   "peerDependencies": {
     "three": "^0.110.0"
