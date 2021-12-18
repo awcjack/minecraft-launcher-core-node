@@ -113,13 +113,23 @@ export function resolveProcessors(side: "client" | "server", installProfile: Ins
             server: dirname(variables.INSTALLER.server),
         }
     }
-    const processors = (installProfile.processors || []).map((proc) => ({
+    let processors = (installProfile.processors || []).map((proc) => ({
         ...proc,
         args: proc.args.map(normalizePath).map(normalizeVariable),
         outputs: proc.outputs
             ? Object.entries(proc.outputs).map(([k, v]) => ({ [normalizeVariable(k)]: normalizeVariable(v) })).reduce((a, b) => Object.assign(a, b), {})
             : undefined,
     }));
+    processors = processors.filter((processor) => {
+        if (processor.sides && Array.isArray(processor.sides)) {
+            if (processor.sides.includes(side)) {
+                return true
+            } else {
+                return false
+            }
+        }
+        return true
+    });
     return processors;
 }
 
