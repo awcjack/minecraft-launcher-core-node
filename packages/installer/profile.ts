@@ -121,7 +121,11 @@ export function resolveProcessors(side: "client" | "server", installProfile: Ins
             : undefined,
     }));
     processors = processors.filter((processor) => {
+        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+        // @ts-ignore
         if (processor.sides && Array.isArray(processor.sides)) {
+            // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+            // @ts-ignore
             if (processor.sides.includes(side)) {
                 return true
             } else {
