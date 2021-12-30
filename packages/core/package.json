@@ -1,7 +1,7 @@
 {
   "name": "@xmcl/core",
   "version": "2.8.0",
-  "main": "./index.ts",
+  "main": "./dist/index.js",
   "description": "Minecraft version parsing and game launching.",
   "engines": {
     "node": ">=10.0"
