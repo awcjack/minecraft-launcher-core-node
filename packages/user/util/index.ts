@@ -38,6 +38,7 @@ export const httpRequester: HttpRequester = async (option) => {
                 body = form.getBuffer();
                 break;
         }
+        requestOption.headers = headers
     }
     return new Promise<{
         body: string;
