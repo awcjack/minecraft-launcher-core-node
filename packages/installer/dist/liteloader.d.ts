@@ -90,7 +90,7 @@ export declare function getLiteloaderVersionList(option?: {
  * @param version The real existed version id (under the the provided minecraft location) you want to installed liteloader inherit
  * @throws {@link MissingVersionJsonError}
  */
-export declare function installLiteloader(versionMeta: LiteloaderVersion, location: MinecraftLocation, options?: InstallOptions): any;
+export declare function installLiteloader(versionMeta: LiteloaderVersion, location: MinecraftLocation, options?: InstallOptions): Promise<string>;
 /**
  * Install the liteloader to specific minecraft location.
  *

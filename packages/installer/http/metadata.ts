@@ -1,6 +1,6 @@
 import { Agents } from "./agents";
-import { fetch, urlToRequestOptions } from "./utils"
 import { URL } from "url";
+import { fetch } from "electron-fetch";
 
 export interface ResourceMetadata {
   url: URL
@@ -22,34 +22,29 @@ export class FetchMetadataError extends Error {
 }
 
 export async function getMetadata(srcUrl: URL, _headers: Record<string, any>, agents: Agents, useGet: boolean = false): Promise<ResourceMetadata> {
-    const { message, request } = await fetch({
-        ...urlToRequestOptions(srcUrl),
+    const res = await fetch(srcUrl, {
         method: useGet ? "GET" : "HEAD",
-        ..._headers
+        headers: _headers
     }, agents);
 
-    message.resume();
-    request.destroy();
-
-    let { headers, url: resultUrl, statusCode } = message;
+    const statusCode = res.status ?? 500;
     if (statusCode === 405 && !useGet) {
         return getMetadata(srcUrl, _headers, agents, useGet);
     }
-    statusCode = statusCode ?? 500;
     if (statusCode !== 200 && statusCode !== 201) {
         throw new FetchMetadataError(
             statusCode === 404 ? "FetchResourceNotFound"
                 : statusCode >= 500 ? "FetchResourceServerUnavaiable"
                     : "BadResourceRequest",
             statusCode,
-            resultUrl ?? srcUrl.toString(),
-            `Fetch download metadata failed due to http error. Status code: ${statusCode} on ${resultUrl}`)
+            srcUrl.toString(),
+            `Fetch download metadata failed due to http error. Status code: ${statusCode} on ${srcUrl.toString()}`)
     }
-    const url = resultUrl ? new URL(resultUrl) : srcUrl;
-    const isAcceptRanges = headers["accept-ranges"] === "bytes";
-    const contentLength = headers["content-length"] ? Number.parseInt(headers["content-length"]) : -1;
-    const lastModified = headers["last-modified"] ?? undefined;
-    const eTag = headers.etag ;
+    const url = srcUrl;
+    const isAcceptRanges = res.headers?.get["accept-ranges"] === "bytes";
+    const contentLength = res.headers?.get["content-length"] ? Number.parseInt(res.headers?.get["content-length"]) : -1;
+    const lastModified = res.headers?.get["last-modified"] ?? undefined;
+    const eTag = res.headers?.get.etag ;
 
     return {
         url,

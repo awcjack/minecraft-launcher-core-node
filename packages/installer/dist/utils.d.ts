@@ -11,7 +11,7 @@ export declare const copyFile: typeof fcopyFile.__promisify__;
 export declare const truncate: typeof ftruncate.__promisify__;
 export { checksum } from "@xmcl/core";
 export { readFile, writeFile, mkdir, exists, pipeline };
-export declare function missing(target: string): any;
+export declare function missing(target: string): Promise<boolean>;
 export declare function ensureDir(target: string): Promise<void>;
 export declare function ensureFile(target: string): Promise<void>;
 export declare function normalizeArray<T>(arr?: T | T[]): T[];

@@ -17,6 +17,7 @@
     "@xmcl/forge-site-parser": "^2.0.8",
     "@xmcl/task": "^4.0.2",
     "@xmcl/unzip": "^2.0.0",
+    "electron-fetch": "^1.7.3",
     "yauzl": "^2.10.0"
   },
   "repository": {

@@ -49,12 +49,12 @@ interface DownloadInfo {
  * Install JRE from Mojang offical resource. It should install jdk 8.
  * @param options The install options
  */
-export declare function installJreFromMojangTask(options: InstallJavaOptions): any;
+export declare function installJreFromMojangTask(options: InstallJavaOptions): import("@xmcl/task").TaskRoutine<void>;
 /**
  * Install JRE from Mojang offical resource. It should install jdk 8.
  * @param options The install options
  */
-export declare function installJreFromMojang(options: InstallJavaOptions): any;
+export declare function installJreFromMojang(options: InstallJavaOptions): Promise<void>;
 /**
  * Try to resolve a java info at this path. This will call `java -version`
  * @param path The java exectuable path.

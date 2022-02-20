@@ -32,7 +32,7 @@ export interface InstallOptifineOptions extends InstallOptions {
  * @beta Might be changed and don't break the major version
  * @throws {@link BadOptifineJarError}
  */
-export declare function installOptifine(installer: string, minecraft: MinecraftLocation, options?: InstallOptifineOptions): any;
+export declare function installOptifine(installer: string, minecraft: MinecraftLocation, options?: InstallOptifineOptions): Promise<string>;
 export declare class BadOptifineJarError extends Error {
     optifine: string;
     /**
@@ -55,5 +55,5 @@ export declare class BadOptifineJarError extends Error {
  * @beta Might be changed and don't break the major version
  * @throws {@link BadOptifineJarError}
  */
-export declare function installOptifineTask(installer: string, minecraft: MinecraftLocation, options?: InstallOptifineOptions): any;
+export declare function installOptifineTask(installer: string, minecraft: MinecraftLocation, options?: InstallOptifineOptions): import("@xmcl/task").TaskRoutine<string>;
 //# sourceMappingURL=optifine.d.ts.map

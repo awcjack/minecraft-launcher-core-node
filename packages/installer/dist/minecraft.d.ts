@@ -248,7 +248,7 @@ export declare function installResolvedLibrariesTask(libraries: ResolvedLibrary[
  * @param folder The minecraft folder
  * @param options The asset option
  */
-export declare function installResolvedAssetsTask(assets: AssetInfo[], folder: MinecraftFolder, options?: AssetsOptions): any;
+export declare function installResolvedAssetsTask(assets: AssetInfo[], folder: MinecraftFolder, options?: AssetsOptions): import("@xmcl/task").TaskRoutine<void>;
 export declare class InstallJsonTask extends DownloadTask {
     constructor(version: MinecraftVersionBaseInfo, minecraft: MinecraftLocation, options: Options);
 }

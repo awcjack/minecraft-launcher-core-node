@@ -92,7 +92,7 @@ export declare function resolveProcessors(side: "client" | "server", installProf
  * @param java The java executable path
  * @throws {@link PostProcessError}
  */
-export declare function postProcess(processors: PostProcessor[], minecraft: MinecraftFolder, java: string): any;
+export declare function postProcess(processors: PostProcessor[], minecraft: MinecraftFolder, java: string): Promise<void>;
 /**
  * Install by install profile. The install profile usually contains some preprocess should run before installing dependencies.
  *
@@ -101,7 +101,7 @@ export declare function postProcess(processors: PostProcessor[], minecraft: Mine
  * @param options The options to install
  * @throws {@link PostProcessError}
  */
-export declare function installByProfile(installProfile: InstallProfile, minecraft: MinecraftLocation, options?: InstallProfileOption): any;
+export declare function installByProfile(installProfile: InstallProfile, minecraft: MinecraftLocation, options?: InstallProfileOption): Promise<void>;
 /**
  * Install by install profile. The install profile usually contains some preprocess should run before installing dependencies.
  *
@@ -109,7 +109,7 @@ export declare function installByProfile(installProfile: InstallProfile, minecra
  * @param minecraft The minecraft location
  * @param options The options to install
  */
-export declare function installByProfileTask(installProfile: InstallProfile, minecraft: MinecraftLocation, options?: InstallProfileOption): any;
+export declare function installByProfileTask(installProfile: InstallProfile, minecraft: MinecraftLocation, options?: InstallProfileOption): import("@xmcl/task").TaskRoutine<void>;
 export declare class PostProcessBadJarError extends Error {
     jarPath: string;
     causeBy: Error;

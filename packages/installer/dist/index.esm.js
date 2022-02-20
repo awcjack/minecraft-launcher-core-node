@@ -12,6 +12,7 @@ import { parse } from '@xmcl/forge-site-parser';
 import { open as open$2, walkEntriesGenerator, readEntry, filterEntries, openEntryReadStream, readAllEntries, getEntriesRecord } from '@xmcl/unzip';
 import { O_RDWR, O_CREAT } from 'constants';
 import { cpus, tmpdir, platform, EOL } from 'os';
+import { fetch as fetch$1 } from 'electron-fetch';
 import { ClassReader, Opcodes, ClassVisitor } from '@xmcl/asm';
 
 const unlink = promisify(unlink$1);
@@ -695,29 +696,25 @@ class FetchMetadataError extends Error {
     }
 }
 async function getMetadata(srcUrl, _headers, agents, useGet = false) {
-    var _a;
-    const { message, request } = await fetch({
-        ...urlToRequestOptions(srcUrl),
+    var _a, _b, _c, _d, _e, _f, _g;
+    const res = await fetch$1(srcUrl, {
         method: useGet ? "GET" : "HEAD",
-        ..._headers
+        headers: _headers
     }, agents);
-    message.resume();
-    request.destroy();
-    let { headers, url: resultUrl, statusCode } = message;
+    const statusCode = (_a = res.status) !== null && _a !== void 0 ? _a : 500;
     if (statusCode === 405 && !useGet) {
         return getMetadata(srcUrl, _headers, agents, useGet);
     }
-    statusCode = statusCode !== null && statusCode !== void 0 ? statusCode : 500;
     if (statusCode !== 200 && statusCode !== 201) {
         throw new FetchMetadataError(statusCode === 404 ? "FetchResourceNotFound"
             : statusCode >= 500 ? "FetchResourceServerUnavaiable"
-                : "BadResourceRequest", statusCode, resultUrl !== null && resultUrl !== void 0 ? resultUrl : srcUrl.toString(), `Fetch download metadata failed due to http error. Status code: ${statusCode} on ${resultUrl}`);
+                : "BadResourceRequest", statusCode, srcUrl.toString(), `Fetch download metadata failed due to http error. Status code: ${statusCode} on ${srcUrl.toString()}`);
     }
-    const url = resultUrl ? new URL(resultUrl) : srcUrl;
-    const isAcceptRanges = headers["accept-ranges"] === "bytes";
-    const contentLength = headers["content-length"] ? Number.parseInt(headers["content-length"]) : -1;
-    const lastModified = (_a = headers["last-modified"]) !== null && _a !== void 0 ? _a : undefined;
-    const eTag = headers.etag;
+    const url = srcUrl;
+    const isAcceptRanges = ((_b = res.headers) === null || _b === void 0 ? void 0 : _b.get["accept-ranges"]) === "bytes";
+    const contentLength = ((_c = res.headers) === null || _c === void 0 ? void 0 : _c.get["content-length"]) ? Number.parseInt((_d = res.headers) === null || _d === void 0 ? void 0 : _d.get["content-length"]) : -1;
+    const lastModified = (_f = (_e = res.headers) === null || _e === void 0 ? void 0 : _e.get["last-modified"]) !== null && _f !== void 0 ? _f : undefined;
+    const eTag = (_g = res.headers) === null || _g === void 0 ? void 0 : _g.get.etag;
     return {
         url,
         isAcceptRanges,
@@ -1560,7 +1557,11 @@ function resolveProcessors(side, installProfile, minecraft) {
             : undefined,
     }));
     processors = processors.filter((processor) => {
+        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+        // @ts-ignore
         if (processor.sides && Array.isArray(processor.sides)) {
+            // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+            // @ts-ignore
             if (processor.sides.includes(side)) {
                 return true;
             }

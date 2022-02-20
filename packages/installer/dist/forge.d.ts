@@ -158,7 +158,7 @@ export declare class BadForgeInstallerJarError extends Error {
  * @returns The installed version name.
  * @throws {@link BadForgeInstallerJarError}
  */
-export declare function installForge(version: RequiredVersion, minecraft: MinecraftLocation, options?: InstallForgeOptions): any;
+export declare function installForge(version: RequiredVersion, minecraft: MinecraftLocation, options?: InstallForgeOptions): Promise<string>;
 /**
  * Install forge to target location.
  * Installation task for forge with mcversion >= 1.13 requires java installed on your pc.

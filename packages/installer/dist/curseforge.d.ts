@@ -88,7 +88,7 @@ export declare function readManifestTask(input: InputType): Task<Manifest>;
  * Read the mainifest data from modpack
  * @throws {@link BadCurseforgeModpackError}
  */
-export declare function readManifest(zip: InputType): any;
+export declare function readManifest(zip: InputType): Promise<Manifest>;
 export declare type FilePathResolver = (projectId: number, fileId: number, minecraft: MinecraftFolder, url: string) => string | Promise<string>;
 export declare type CurseforgeURLQuery = (projectId: number, fileId: number) => Promise<string>;
 export declare type CurseforgeFileTypeQuery = (projectId: number) => Promise<"mods" | "resourcepacks">;
@@ -100,7 +100,7 @@ export declare function createDefaultCurseforgeQuery(): CurseforgeURLQuery;
  * @param minecraft The minecraft location
  * @param options The options for query curseforge
  */
-export declare function installCurseforgeModpack(zip: InputType, minecraft: MinecraftLocation, options?: CurseforgeOptions): any;
+export declare function installCurseforgeModpack(zip: InputType, minecraft: MinecraftLocation, options?: CurseforgeOptions): Promise<Manifest>;
 export declare class DownloadCurseforgeFilesTask extends TaskGroup<void> {
     readonly manifest: Manifest;
     readonly minecraft: MinecraftFolder;
@@ -119,14 +119,14 @@ export declare class DownloadCurseforgeFilesTask extends TaskGroup<void> {
  * @param options The options for query curseforge
  * @throws {@link BadCurseforgeModpackError}
  */
-export declare function installCurseforgeModpackTask(input: InputType, minecraft: MinecraftLocation, options?: CurseforgeOptions): any;
+export declare function installCurseforgeModpackTask(input: InputType, minecraft: MinecraftLocation, options?: CurseforgeOptions): import("@xmcl/task").TaskRoutine<Manifest>;
 /**
  * Install a cureseforge xml file to a specific locations
  */
-export declare function installCurseforgeFile(file: File, destination: string, options?: InstallFileOptions): any;
+export declare function installCurseforgeFile(file: File, destination: string, options?: InstallFileOptions): Promise<void>;
 /**
  * Install a cureseforge xml file to a specific locations
  */
-export declare function installCurseforgeFileTask(file: File, destination: string, options?: InstallFileOptions): any;
+export declare function installCurseforgeFileTask(file: File, destination: string, options?: InstallFileOptions): import("@xmcl/task").TaskRoutine<void>;
 export {};
 //# sourceMappingURL=curseforge.d.ts.map
