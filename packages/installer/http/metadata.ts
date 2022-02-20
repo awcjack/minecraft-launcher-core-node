@@ -1,6 +1,6 @@
 import { Agents } from "./agents";
 import { URL } from "url";
-import { fetch } from "electron-fetch";
+import fetch from "electron-fetch";
 
 export interface ResourceMetadata {
   url: URL

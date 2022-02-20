@@ -12,7 +12,7 @@ import { parse } from '@xmcl/forge-site-parser';
 import { open as open$2, walkEntriesGenerator, readEntry, filterEntries, openEntryReadStream, readAllEntries, getEntriesRecord } from '@xmcl/unzip';
 import { O_RDWR, O_CREAT } from 'constants';
 import { cpus, tmpdir, platform, EOL } from 'os';
-import { fetch as fetch$1 } from 'electron-fetch';
+import fetch$1 from 'electron-fetch';
 import { ClassReader, Opcodes, ClassVisitor } from '@xmcl/asm';
 
 const unlink = promisify(unlink$1);

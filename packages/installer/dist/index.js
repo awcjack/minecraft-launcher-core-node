@@ -16,8 +16,12 @@ var forgeSiteParser = require('@xmcl/forge-site-parser');
 var unzip = require('@xmcl/unzip');
 var constants = require('constants');
 var os = require('os');
-var electronFetch = require('electron-fetch');
+var fetch$1 = require('electron-fetch');
 var asm = require('@xmcl/asm');
+
+function _interopDefaultLegacy (e) { return e && typeof e === 'object' && 'default' in e ? e : { 'default': e }; }
+
+var fetch__default = /*#__PURE__*/_interopDefaultLegacy(fetch$1);
 
 const unlink = util.promisify(fs.unlink);
 const stat = util.promisify(fs.stat);
@@ -701,7 +705,7 @@ class FetchMetadataError extends Error {
 }
 async function getMetadata(srcUrl, _headers, agents, useGet = false) {
     var _a, _b, _c, _d, _e, _f, _g;
-    const res = await electronFetch.fetch(srcUrl, {
+    const res = await fetch__default["default"](srcUrl, {
         method: useGet ? "GET" : "HEAD",
         headers: _headers
     }, agents);
