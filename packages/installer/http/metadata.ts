@@ -22,10 +22,18 @@ export class FetchMetadataError extends Error {
 }
 
 export async function getMetadata(srcUrl: URL, _headers: Record<string, any>, agents: Agents, useGet: boolean = false): Promise<ResourceMetadata> {
-    const res = await fetch(srcUrl, {
+    const res = await fetch(srcUrl.toString(), {
         method: useGet ? "GET" : "HEAD",
-        headers: _headers
-    }, agents);
+        headers: _headers,
+        agent: function (_parsedURL: { protocol: string; }) {
+            if (_parsedURL.protocol == "http:" && agents.http) {
+                return agents.http;
+            } else if (_parsedURL.protocol == "http:" && agents.https) {
+                return agents.https;
+            }
+            return null
+        }
+    });
 
     const statusCode = res.status ?? 500;
     if (statusCode === 405 && !useGet) {

@@ -11,7 +11,8 @@ import { getMetadata, ResourceMetadata } from "./metadata";
 import { DefaultRetryHandlerOptions, resolveRetryHandler, RetryHandler } from "./retry";
 import { DefaultSegmentPolicyOptions, resolveSegmentPolicy, Segment, SegmentPolicy } from "./segment";
 import { resolveStatusController, StatusController } from "./status";
-import { fetch, urlToRequestOptions } from "./utils";
+import fetch from "electron-fetch";
+import AbortController from "abortcontroller-polyfill/dist/cjs-ponyfill"
 import { ChecksumValidatorOptions, resolveValidator, ValidationError, Validator } from "./validator";
 
 // @ts-ignore
@@ -155,20 +156,20 @@ export class Download {
                 // the segment is finished, just ignore it
                 return;
             }
-            const options: RequestOptions = {
-                ...urlToRequestOptions(metadata.url),
-                method: "GET",
-                headers: {
-                    ...this.headers,
-                    Range: `bytes=${segment.start}-${(segment.end) ?? ""}`,
-                },
-            };
             try {
                 if (abortSignal.aborted || flag) { throw new AbortError(); }
-                const { message: response, request } = await fetch(options, this.agents);
+                const controller = new AbortController();
+                const res = await fetch(metadata.url?.toString(), {
+                    method: "GET",
+                    headers: {
+                        ...this.headers,
+                        Range: `bytes=${segment.start}-${(segment.end) ?? ""}`,
+                    },
+                    signal: controller.signal
+                });
                 if (abortSignal.aborted || flag) {
                     // ensure we correctly release the message
-                    response.resume();
+                    controller.abort();
                     throw new AbortError();
                 }
                 const fileStream = createWriteStream(this.destination, {
@@ -177,21 +178,26 @@ export class Download {
                     // we should not close the file stream, as it will close the fd as the same time!
                     autoClose: false,
                 });
-                // track the progress
-                response.on("data", (chunk) => {
-                    segment.start += chunk.length;
-                    this.statusController.onProgress(chunk.length, this.statusController.progress + chunk.length);
+                await new Promise((resolve, reject) => {
+                    res.body.pipe(fileStream);
+                    res.body.on("error", reject);
+                    fileStream.on("finish", resolve);
                 });
+                // track the progress
+                // response.on("data", (chunk) => {
+                //     segment.start += chunk.length;
+                //     this.statusController.onProgress(chunk.length, this.statusController.progress + chunk.length);
+                // });
                 // create abort handler
-                const abortHandler = () => {
-                    request.destroy(new AbortError());
-                    response.unpipe();
-                }
-                abortHandlers.push(abortHandler)
+                // const abortHandler = () => {
+                //     request.destroy(new AbortError());
+                //     response.unpipe();
+                // }
+                // abortHandlers.push(abortHandler)
                 // add abort handler to abort signal
-                abortSignal.addEventListener("abort", abortHandler);
-                await pipeline(response, fileStream);
-                abortSignal.removeEventListener("abort", abortHandler);
+                // abortSignal.addEventListener("abort", abortHandler);
+                // await pipeline(response, fileStream);
+                // abortSignal.removeEventListener("abort", abortHandler);
             } catch (e) {
                 if (e instanceof AbortError || (e as any).message === "aborted") {
                     // user abort the operation, or abort by other sibling error
